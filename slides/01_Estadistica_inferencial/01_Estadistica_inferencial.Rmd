@@ -1,0 +1,144 @@
+---
+title: "Programación con R"
+subtitle: "<br/> Marvin J. Quispe Sedano "
+author: "Environmental Data Scientist <br/><br/> <img src='../img/gif-logods.png' alt='envids' width='100' height='100'> <br/>"
+date: "Lima, 2021"
+output:
+  xaringan::moon_reader:
+    css: "../my-theme.css"
+    lib_dir: libs
+    nature:
+      highlightLines: true
+      highlightStyle: solarized-dark
+      countIncrementalSlides: true
+      
+---
+
+```{r child = "../setup.Rmd"}
+```
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+# AGREGAR PAQUETES A UTILIZAR
+
+```
+class: inverse, center, middle
+
+## CLASE 1 
+### ESTADÍSTICA INFERENCIAL EN R
+
+---
+
+## Introducción
+
+- R es un entorno y lenguaje de programación ampliamente usado en la ciencia de datos, principalmente en el análisis estadístico.
+
+
+<img src='img/r_intro.png' width='70%' height='70%' class='centerimage'>
+
+
+---
+
+## Estadística inferencial
+
+- La estadística inferencial se centra en el estudio de técnicas y procedimientos que nos permiten mediante los datos tomados a una muestra, determinar las características de una población.
+- La incapacidad de hacer **predicciones** es la consecuencia lógica de "no hacer suposiciones".
+- La teoría de la inferencia estadística se basa en la **teoría de la probabilidad**.
+
+---
+
+
+<img src='img/elecciones.jpeg' width='70%' height='70%' class='centerimage'>
+
+
+---
+
+## La probabilidad
+
+- La probabilidad es una rama de las matemáticas que nos permite averiguar con qué frecuencia sucederán diferentes tipos de sucesos o eventos aleatorios.
+- Se puede definiar la probabilidad con un número del 0 al 1. Ejm: Pdado(6) = 1/6 ; Pmoneda(cara) = 0.5 , etc
+- En la teoría de la probabilidad, el modelo es conocido, pero los datos no.
+
+---
+
+## Visión frecuentista
+
+- Este punto de vista define la probabilidad como una frecuencia a largo plazo.
+
+<img src='img/moneda-prob.gif' width='100%' height='100%' class='centerimage'>
+
+
+---
+
+## Visión bayesiana
+
+- Este punto de vista, también llamado probabilidad subjetiva, define la probabilidad de un evento como el grado de creencia que un **agente inteligente** asigna a la ocurrencia de un evento.
+- El punto de vista frecuentista no permite que dos observadores atribuyan diferentes probabilidades al mismo evento: cuando eso sucede, al menos uno de ellos debe estar equivocado. La visión bayesiana no evita que esto ocurra.
+
+---
+
+## Reglas de la probabilidad
+
+- El evento elemental: Es el resultado de una observación sobre algún evento.
+- Espacio muestral: Es el conjunto de todos los eventos posibles.
+- Para un evento "X" su probabilidad estará entre 0 y 1.
+
+
+<img src='img/tabla-prob.png' width='90%' height='90%' class='centerimage'>
+
+
+<img src='img/tabla-prob2.png' width='90%' height='90%' class='centerimage'>
+
+
+---
+
+## Distribuciones 
+
+
+<img src='img/distrib-prob.png' width='90%' height='90%' class='centerimage'>
+
+
+---
+
+## Distribuciones binomiales
+
+- En R, existe la función **dbinom()** que nos permite obtener las probabilidades binomiales para un suceso o evento en específico.
+
+```{r , echo = TRUE , collapse = TRUE}
+
+# PROBABILIDADES BINOMIALES
+
+# x = número de veces que saldra el 6
+# size = veces en las que lanzamos el dado
+# prob = probabilidad de sacar un 6 en el dado
+
+dbinom(x = 2, size = 20, prob = 1/6)
+
+    
+```
+
+---
+
+## Distribuciones normales
+
+- En R, existe la función **dnorm()** que nos permite obtener las probabilidades normales para un suceso o evento en específico.
+
+```{r , echo = TRUE , collapse = TRUE}
+
+# PROBABILIDADES NORMALES
+
+# x = número de veces que saldra cara
+# mean = promedio de las probabilidades
+# sd = desviacion estandar de las probailidades 
+
+dnorm(x = 1, mean = 1, sd = 0.1 )
+
+```   
+
+---
+
+class: inverse, center, middle
+
+# GRACIAS! <br/>  <a href="mailto: marvinjqs@gmail.com"> <img alt="gmail" src="../img/gmail-logo.gif" width='20%' height='50%'> </a> 
+
+
+
