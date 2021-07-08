@@ -1,5 +1,5 @@
 #################################
-# PROCESAMIENTO DE DATOS DE CALIDAD DE AIRE Y METEOROLÓGICOS
+# PROCESAMIENTO DE DATOS DE CALIDAD DE AIRE Y METEOROLOGICOS
 # CURSO: PROGRAMACION CON R
 # Marvin J. Quispe Sedano
 # Email: marvinjqs@gmail.com
@@ -78,6 +78,7 @@ plot_qq(df)
 
 # TIME PLOT
 library(openair)
+
 timePlot(df, pollutant = "PM25",
          ref.y = list(h = 50, lty = 5),
          avg.time = "1 day")
@@ -90,6 +91,23 @@ ggplot(df, aes(y = PM25)) +
 ggplot(df, aes(x=date, y=PM25)) + 
   geom_line() +
   geom_smooth(method = "loess")
+
+
+colnames(df)[6] <- "wd"
+colnames(df)[7] <- "ws"
+
+# GRAFICAMOS LAS ROSAS DE VIENTO
+windRose(df)
+windRose(df, type = "season")
+windRose(df, type = "month")
+
+calendarPlot(df, pollutant = "TEMP", year = 2020,
+             breaks = c(-20, 0, 10, 20, 25, 100),
+             labels = c("Muy frio", "Frio", "Templado", "Calido", "Muy calido"),
+             cols = "increment", statistic = "max")
+
+
+polarAnnulus(df, pollutant = "PM25")
 
 
 
