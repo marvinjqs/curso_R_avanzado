@@ -20,6 +20,8 @@ library(raster)
 library(sf)
 library(ncdf4)
 library(ggplot2)
+library(ggspatial)
+library(cowplot)
 library(rgdal)
 library(DataExplorer)
 
@@ -42,7 +44,7 @@ setwd("C:/Users/Asus/Desktop/R/AVANZADO/CLASE2")
 # https://iridl.ldeo.columbia.edu/
 
 download.file("https://iridl.ldeo.columbia.edu/SOURCES/.SENAMHI/.HSR/.PISCO/.Prec/.v2p1/.stable/.daily/.Prec/data.nc",
-              "PISCOpp_V2.1.nc")
+              "PISCOpp_V2.1b.nc")
 
 
 ###################
@@ -66,9 +68,14 @@ spplot(PISCOpp_d[[1:10]])
 cuencas_shp <- read_sf('CUENCAS-PERU.shp')
 estaciones_shp <- st_read('ESTACIONES-HIDROMETEO-PERU.shp')
 
+###########################################
+cuencas_shp2 <- readOGR('CUENCAS-PERU.shp')
+
 # IMPORTAR LOS SHP DE LIMITES GEOGRAFICOS
 
 peru_lim_shp <-getData('GADM', country='PER', level=1)
+plot(peru_lim_shp)
+
 peru_lim_shp <- st_as_sf(peru_lim_shp)
 
 # VISUALIZAR EL SHP DE LAS ESTACIONES
@@ -77,7 +84,7 @@ map_estaciones <- ggplot() +
   geom_sf(data = peru_lim_shp) +
   theme_bw() + xlim(-85,-65) + ylim(-20,2) + 
   xlab("Longitud") + ylab("Latitud") +
-  geom_sf(data = estaciones_shp, aes(color = ico), size = 0.05) +
+  geom_sf(data = estaciones_shp, aes(color = ico), size = 0.5) +
   scale_color_manual(values=c("blue", "red"))
 
 map_estaciones
@@ -108,12 +115,25 @@ cuenca_rimac <- cuencas_shp[!is.na(cuencas_shp$NOMB_UH_N6) & cuencas_shp$NOMB_UH
 
 est_met_rimac <- st_intersection(est_met, cuenca_rimac)
 
-ggplot() + 
-  geom_sf(data = cuenca_rimac) +
+A <- ggplot() + 
+  geom_sf(data = cuenca_rimac, color = "black") +
   geom_sf(data = est_met_rimac, aes(color = nom), shape = 10, size = 5) +
-  xlab("Longitud") + ylab("Latitud") 
+  theme_bw() +
+  xlab("Longitud") + ylab("Latitud") +
+  labs(color = "Estaciones meteorológicas") +
+  annotation_north_arrow(location="tr", which_north="true", style=north_arrow_fancy_orienteering())+
+  annotation_scale(location = "bl",bar_cols = c("black", "white"))
+
+B <- ggplot() + 
+    geom_sf(data = peru_lim_shp, color = "black", fill = "beige") +
+    ggtitle("MAPA DE UBICACIÓN")
 
 
+mapa_2 <- ggdraw() + 
+  draw_plot(A) + 
+  draw_plot(B, x = 0.05, y = 0.6, width = 0.25, height = 0.35)
+ 
+           
 ########################
 #  EXTRACCION DE DATOS
 ########################
@@ -123,7 +143,7 @@ ggplot() +
 
 # CADA ESTACION ESTA UBICADA EN UN PIXEL ESPECIFICO, EL CUAL TIENE UN ID
 
-cell_id_est <- raster::extract(PISCOpp_d[[1]], 
+cell_id_est <- raster::extract(PISCOpp_d[[5]], 
                                    est_met_rimac, 
                                    cellnumbers = T)[,1]
 
@@ -153,8 +173,16 @@ row.names(df_pisco_rimac) <- NULL
 PISCOpp_m <- raster::brick("PISCOppm_V2.1.nc")
 PISCOpp_m
 
+crs(PISCOpp_m) <- CRS('+init=EPSG:4326')
+projection(PISCOpp_d)
+
+# CORTAR EL RASTER USANDO UN POLIGONO (EXTRACT BY MASK)
+# DE SER NECESARIO GENERAMOS UN BUFFER PREVIO
+
+buff_5km_rimac <- st_buffer(cuenca_rimac, 0.2)
+
 raster_rimac1 <- raster::mask(PISCOpp_d[[1]],
-                             cuenca_rimac)
+                              buff_5km_rimac)
 
 spplot(raster_rimac1)
 
@@ -170,9 +198,11 @@ ggplot() +
   geom_sf(data = est_met_rimac , shape = 10, size = 5) +
   xlab("Longitud") + ylab("Latitud") +
   ggtitle("PRECIPITACIÓN ACUMULADA MENSUAL DE LA CUENCA RIMAC - ENERO 1981")
+  
 
 
 #####################################################
+
 
 raster_rimac1 <- raster::crop(PISCOpp_d[[1]],
                               cuenca_rimac)
