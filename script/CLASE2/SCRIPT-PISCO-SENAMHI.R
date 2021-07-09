@@ -121,19 +121,26 @@ A <- ggplot() +
   theme_bw() +
   xlab("Longitud") + ylab("Latitud") +
   labs(color = "Estaciones meteorológicas") +
-  annotation_north_arrow(location="tr", which_north="true", style=north_arrow_fancy_orienteering())+
-  annotation_scale(location = "bl",bar_cols = c("black", "white"))
+  annotation_north_arrow(location="tr", which_north="true", 
+                         style= north_arrow_nautical())+
+  annotation_scale(location = "bl",bar_cols = c("darkgray", "white"))
 
 B <- ggplot() + 
     geom_sf(data = peru_lim_shp, color = "black", fill = "beige") +
-    ggtitle("MAPA DE UBICACIÓN")
+    scale_x_continuous(breaks=seq(-85,-65,5)) +
+    ggtitle("MAPA DE UBICACIÓN") +
+    theme_bw() +
+    theme(plot.title = element_text(size = 6, hjust = 0.5),
+          axis.text = element_text(size = 6))
 
 
 mapa_2 <- ggdraw() + 
   draw_plot(A) + 
-  draw_plot(B, x = 0.05, y = 0.6, width = 0.25, height = 0.35)
+  draw_plot(B, x = -0.35, y = 0.3, scale = 0.3)
  
-           
+mapa_2
+
+         
 ########################
 #  EXTRACCION DE DATOS
 ########################
