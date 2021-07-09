@@ -116,7 +116,8 @@ cuenca_rimac <- cuencas_shp[!is.na(cuencas_shp$NOMB_UH_N6) & cuencas_shp$NOMB_UH
 est_met_rimac <- st_intersection(est_met, cuenca_rimac)
 
 A <- ggplot() + 
-  geom_sf(data = cuenca_rimac, color = "black") +
+  base_map(st_bbox(cuenca_rimac), basemap = 'voyager',increase_zoom = 3) +
+  geom_sf(data = cuenca_rimac, color = "black", fill = NA) +
   geom_sf(data = est_met_rimac, aes(color = nom), shape = 10, size = 5) +
   theme_bw() +
   xlab("Longitud") + ylab("Latitud") +
