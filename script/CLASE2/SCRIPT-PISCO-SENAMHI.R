@@ -21,6 +21,8 @@ library(sf)
 library(ncdf4)
 library(ggplot2)
 library(ggspatial)
+library(devtools)
+library(basemapR)
 library(cowplot)
 library(rgdal)
 library(DataExplorer)
@@ -116,7 +118,7 @@ cuenca_rimac <- cuencas_shp[!is.na(cuencas_shp$NOMB_UH_N6) & cuencas_shp$NOMB_UH
 est_met_rimac <- st_intersection(est_met, cuenca_rimac)
 
 A <- ggplot() + 
-  base_map(st_bbox(cuenca_rimac), basemap = 'voyager',increase_zoom = 3) +
+  base_map(st_bbox(cuenca_rimac), basemap = 'mapnik',increase_zoom = 3) +
   geom_sf(data = cuenca_rimac, color = "black", fill = NA) +
   geom_sf(data = est_met_rimac, aes(color = nom), shape = 10, size = 5) +
   theme_bw() +
@@ -124,7 +126,18 @@ A <- ggplot() +
   labs(color = "Estaciones meteorológicas") +
   annotation_north_arrow(location="tr", which_north="true", 
                          style= north_arrow_nautical())+
-  annotation_scale(location = "bl",bar_cols = c("darkgray", "white"))
+  annotation_scale(location = "bl",bar_cols = c("darkgray", "white"),
+                   style = "ticks")
+
+
+leaflet( ) %>%
+  addTiles() %>%
+  addRasterImage(raster_rimac1, opacity = 0.6) %>%
+  addPolygons(data = cuenca_rimac,
+              fillColor = terrain.colors(10, alpha = NULL),
+              popup = ~as.character(Nombre_UH)) 
+
+
 
 B <- ggplot() + 
     geom_sf(data = peru_lim_shp, color = "black", fill = "beige") +
@@ -187,7 +200,7 @@ projection(PISCOpp_d)
 # CORTAR EL RASTER USANDO UN POLIGONO (EXTRACT BY MASK)
 # DE SER NECESARIO GENERAMOS UN BUFFER PREVIO
 
-buff_5km_rimac <- st_buffer(cuenca_rimac, 0.2)
+buff_5km_rimac <- st_buffer(cuenca_rimac, 0.15)
 
 raster_rimac1 <- raster::mask(PISCOpp_d[[1]],
                               buff_5km_rimac)
@@ -224,8 +237,9 @@ df_raster_rimac1 <- na.omit(df_raster_rimac1)
 colnames(df_raster_rimac1) <- c("x", "y", "PP_ENERO")
 
 ggplot() +
+  base_map(st_bbox(cuenca_rimac), basemap = 'mapnik',increase_zoom = 3) +
   geom_raster(data = df_raster_rimac1 , aes(x = x, y = y, fill = PP_ENERO)) +
-  geom_sf(data = cuenca_rimac, fill = NA, color = "black") +
+  geom_sf(data = cuenca_rimac, fill = NA, color = "red") +
   geom_sf(data = est_met_rimac , shape = 10, size = 5) +
   xlab("Longitud") + ylab("Latitud") +
   ggtitle("PRECIPITACIÓN ACUMULADA MENSUAL DE LA CUENCA RIMAC - ENERO 1981")
