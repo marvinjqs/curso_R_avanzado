@@ -136,6 +136,97 @@ dnorm(x = 1, mean = 1, sd = 0.1 )
 
 ---
 
+## Análisis de distribución
+
+-  La función **fitDist()** del paquete *gamlss*, nos permite averiguar la distribución que permite explicar mejor nuestro conjunto de datos.
+
+
+```{r , echo = TRUE , collapse = TRUE}
+
+library(gamlss)
+n <- 400
+set.seed(123)
+ma <-  rGA(n=n, mu=2, sigma=0.5)
+
+modelos <- fitDist(y=ma, type='realplus', k=2)
+    
+```
+
+---
+
+```{r , echo = TRUE , collapse = TRUE}
+
+# modelos$fits
+
+h <- histDist(y=ma, family=GA, main='', xlab='x', ylab='Densidad',
+              line.col='blue', line.wd=4, ylim=c(0, 0.5))
+rug(x=ma, col="skyblue")
+    
+```
+
+---
+
+## Pruebas de normalidad
+
+- Se pueden usar algunas pruebas estadísticas que te permitan identificar si la distribución de tus datos cumple con la normalidad.
+- El **p-valor** es la probabilidad de aceptar la Ha (Hipótesis alternativa) como cierta y en realidad es falsa.
+
+	
+<img src='img/prueba-norm.png' width='100%' height='100%' class='centerimage'>
+
+---
+
+## Árboles de decisión
+
+- Los árboles de decisión son útiles para entender la estructura de un conjunto de datos. Sirven para resolver problemas tanto de clasificación (predecir una variable discreta, típicamente binaria) como de regresión (predecir una variable continua).
+
+
+```{r , echo = TRUE , collapse = TRUE, eval = FALSE}
+
+library(party)
+
+modelo <- ctree(y ~ ., data = data)
+modelo <- ctree(y ~  ., data = Training)
+predicciones <- predict(modelo, dataTraining$Test)
+
+# EVALUAR PERFORMANCE
+mean(predicciones == dataTraining$Test$y)
+table(predicciones == dataTraining$Test$y)
+    
+```
+
+---
+
+## Igualdad de medias (t-test)
+
+- Se puede comparar las medias de dos conjuntos de datos usando el **t-test**.
+
+```{r , echo = TRUE , collapse = TRUE, eval = FALSE}
+
+ t.test(data$num ~ data$cat)
+    
+```
+
+<img src='img/t-test.png' width='70%' height='70%' class='centerimage'>
+
+
+
+---
+
+## ANOVA
+
+- La técnica de análisis de varianza (ANOVA) también conocida como análisis factorial fue desarrollada por Fisher en 1930 y constituye la herramienta básica para el estudio del efecto de uno o más factores (cada uno con dos o más niveles) sobre la media de una variable continua. 
+- Es el test estadístico a emplear cuando se desea comparar las medias de dos o más grupos.
+  - Ho <-  $\overline{x}$ 1 = $\overline{x}$ 2
+  - Ha <- $\overline{x}$ 1 != $\overline{x}$ 2
+
+---
+
+
+
+---
+
+
 class: inverse, center, middle
 
 # GRACIAS! <br/>  <a href="mailto: marvinjqs@gmail.com"> <img alt="gmail" src="../img/gmail-logo.gif" width='20%' height='50%'> </a> 

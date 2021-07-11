@@ -152,6 +152,173 @@ dnorm(x = 1, mean = 1, sd = 0.1 )
 
 ---
 
+## Análisis de distribución
+
+-  La función **fitDist()** del paquete *gamlss*, nos permite averiguar la distribución que permite explicar mejor nuestro conjunto de datos.
+
+
+
+```r
+
+library(gamlss)
+## Loading required package: splines
+## Loading required package: gamlss.data
+## 
+## Attaching package: 'gamlss.data'
+## The following object is masked from 'package:datasets':
+## 
+##     sleep
+## Loading required package: gamlss.dist
+## Loading required package: MASS
+## Loading required package: nlme
+## Loading required package: parallel
+##  **********   GAMLSS Version 5.3-4  **********
+## For more on GAMLSS look at https://www.gamlss.com/
+## Type gamlssNews() to see new features/changes/bug fixes.
+n &lt;- 400
+set.seed(123)
+ma &lt;-  rGA(n=n, mu=2, sigma=0.5)
+
+modelos &lt;- fitDist(y=ma, type='realplus', k=2)
+## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |===                                                                   |   4%
+  |                                                                            
+  |======                                                                |   9%
+  |                                                                            
+  |=========                                                             |  13%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |===============                                                       |  22%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |=====================                                                 |  30%
+  |                                                                            
+  |========================                                              |  35%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |==============================                                        |  43%
+## Warning in MLE(ll2, start = list(eta.mu = eta.mu, eta.sigma = eta.sigma), :
+## possible convergence problem: optim gave code=1 false convergence (8)
+## 
+  |                                                                            
+  |=================================                                     |  48%
+## Warning in MLE(ll2, start = list(eta.mu = eta.mu, eta.sigma = eta.sigma), :
+## possible convergence problem: optim gave code=1 false convergence (8)
+## 
+  |                                                                            
+  |=====================================                                 |  52%
+## Warning in MLE(ll2, start = list(eta.mu = eta.mu, eta.sigma = eta.sigma), :
+## possible convergence problem: optim gave code=1 false convergence (8)
+## 
+  |                                                                            
+  |========================================                              |  57%
+  |                                                                            
+  |===========================================                           |  61%
+  |                                                                            
+  |==============================================                        |  65%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |=======================================================               |  78%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |=============================================================         |  87%
+  |                                                                            
+  |================================================================      |  91%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |======================================================================| 100%
+```
+
+---
+
+
+```r
+
+# modelos$fits
+
+h &lt;- histDist(y=ma, family=GA, main='', xlab='x', ylab='Densidad',
+              line.col='blue', line.wd=4, ylim=c(0, 0.5))
+rug(x=ma, col="skyblue")
+```
+
+![](01_Estadistica_inferencial_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+## Pruebas de normalidad
+
+- Se pueden usar algunas pruebas estadísticas que te permitan identificar si la distribución de tus datos cumple con la normalidad.
+- El **p-valor** es la probabilidad de aceptar la Ha (Hipótesis alternativa) como cierta y en realidad es falsa.
+
+	
+&lt;img src='img/prueba-norm.png' width='100%' height='100%' class='centerimage'&gt;
+
+---
+
+## Árboles de decisión
+
+- Los árboles de decisión son útiles para entender la estructura de un conjunto de datos. Sirven para resolver problemas tanto de clasificación (predecir una variable discreta, típicamente binaria) como de regresión (predecir una variable continua).
+
+
+
+```r
+
+library(party)
+
+modelo &lt;- ctree(y ~ ., data = data)
+modelo &lt;- ctree(y ~  ., data = Training)
+predicciones &lt;- predict(modelo, dataTraining$Test)
+
+# EVALUAR PERFORMANCE
+mean(predicciones == dataTraining$Test$y)
+table(predicciones == dataTraining$Test$y)
+    
+```
+
+---
+
+## Igualdad de medias (t-test)
+
+- Se puede comparar las medias de dos conjuntos de datos usando el **t-test**.
+
+
+```r
+
+ t.test(data$num ~ data$cat)
+    
+```
+
+&lt;img src='img/t-test.png' width='70%' height='70%' class='centerimage'&gt;
+
+
+
+---
+
+## ANOVA
+
+- La técnica de análisis de varianza (ANOVA) también conocida como análisis factorial fue desarrollada por Fisher en 1930 y constituye la herramienta básica para el estudio del efecto de uno o más factores (cada uno con dos o más niveles) sobre la media de una variable continua. 
+- Es el test estadístico a emplear cuando se desea comparar las medias de dos o más grupos.
+  - Ho &lt;-  `\(\overline{x}\)` 1 = `\(\overline{x}\)` 2
+  - Ha &lt;- `\(\overline{x}\)` 1 != `\(\overline{x}\)` 2
+
+---
+
+
+
+---
+
+
 class: inverse, center, middle
 
 # GRACIAS! &lt;br/&gt;  &lt;a href="mailto: marvinjqs@gmail.com"&gt; &lt;img alt="gmail" src="../img/gmail-logo.gif" width='20%' height='50%'&gt; &lt;/a&gt; 
