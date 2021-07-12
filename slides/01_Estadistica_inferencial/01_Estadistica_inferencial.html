@@ -61,7 +61,6 @@ class: inverse, center, middle
 
 ---
 
-
 &lt;img src='img/elecciones.jpeg' width='70%' height='70%' class='centerimage'&gt;
 
 
@@ -314,10 +313,38 @@ table(predicciones == dataTraining$Test$y)
 
 ---
 
+## Análisis de Componentes Principales (ACP)
+
+- Principal Component Analysis (PCA) es un método estadístico que permite simplificar la complejidad de espacios muestrales con muchas dimensiones a la vez que conserva su información. 
+- El método PCA es altamente sensible a outliers.
 
 
 ---
 
+
+```r
+
+# BASE DE DATOS
+df &lt;- data("USArrests")
+
+# EVALUAMOS LA VARIANZA
+apply(X = USArrests, MARGIN = 2, FUN = var)
+
+# OBTEMEOS LOS COMPONENTES DEL PCA
+pca &lt;- prcomp(USArrests, scale = TRUE)
+
+# OBSERVAMOS LOS COMPONENTES
+pca$rotation
+
+# EVALUAMOS EL PORCENTAJE DE VARIANZA EXPLICADO
+summary(pca)
+
+# GRAFICAMOS LOS COMPONENTES
+biplot(x = pca, scale = 0, cex = 0.6, 
+       col = c("blue", "red"))
+    
+```
+---
 
 class: inverse, center, middle
 
